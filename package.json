@@ -1,51 +1,67 @@
 {
-  "name": "ionicRK",
-  "version": "1.0.0",
-  "description": "ionicRK: ResearchKit for Hybrid Apps",
-  "dependencies": {
-    "gulp": "^3.5.6",
-    "gulp-sass": "^2.0.4",
-    "gulp-concat": "^2.2.0",
-    "gulp-minify-css": "^0.3.0",
-    "gulp-rename": "^1.2.0"
-  },
-  "devDependencies": {
-    "bower": "^1.3.3",
-    "gulp-util": "^2.2.14",
-    "shelljs": "^0.3.0"
-  },
-  "cordovaPlugins": [
-    "cordova-plugin-device",
-    "cordova-plugin-console",
-    "cordova-plugin-whitelist",
-    "cordova-plugin-file",
-    "cordova-plugin-inappbrowser",
-    "cordova-plugin-camera",
-    "cordova-plugin-geolocation",
-    "cordova-plugin-media-capture",
-    "cordova-plugin-pedometer",
-    "cordova-plugin-tts",
-    "cordova-plugin-device-motion",
-    "ionic-plugin-keyboard",
-    "cordova-plugin-compat",
-    {
-      "locator": "https://github.com/apache/cordova-plugin-splashscreen.git",
-      "id": "cordova-plugin-splashscreen"
+    "name": "ionicRK",
+    "version": "1.0.0",
+    "description": "ionicRK: ResearchKit for Hybrid Apps",
+    "dependencies": {
+        "cordova-android": "^6.2.3",
+        "cordova-plugin-compat": "^1.2.0",
+        "cordova-plugin-file": "^4.3.3",
+        "cordova-plugin-inappbrowser": "^1.4.0",
+        "cordova-plugin-media": "^2.3.0",
+        "gulp": "^3.5.6",
+        "gulp-concat": "^2.2.0",
+        "gulp-minify-css": "^0.3.0",
+        "gulp-rename": "^1.2.0",
+        "gulp-sass": "^2.0.4",
+        "ionic-plugin-keyboard": "^2.0.1"
     },
-    "cordova-plugin-media"
-  ],
-  "cordovaPlatforms": [
-    "android",
-    "ios",
-    {
-      "platform": "android",
-      "version": "",
-      "locator": "android"
+    "devDependencies": {
+        "bower": "^1.3.3",
+        "gulp-util": "^2.2.14",
+        "shelljs": "^0.3.0"
     },
-    {
-      "platform": "ios",
-      "version": "",
-      "locator": "ios"
+    "cordovaPlugins": [
+        "cordova-plugin-device",
+        "cordova-plugin-console",
+        "cordova-plugin-whitelist",
+        "cordova-plugin-file",
+        "cordova-plugin-inappbrowser",
+        "cordova-plugin-camera",
+        "cordova-plugin-geolocation",
+        "cordova-plugin-media-capture",
+        "cordova-plugin-pedometer",
+        "cordova-plugin-tts",
+        "cordova-plugin-device-motion",
+        "ionic-plugin-keyboard",
+        "cordova-plugin-compat",
+        {
+            "locator": "https://github.com/apache/cordova-plugin-splashscreen.git",
+            "id": "cordova-plugin-splashscreen"
+        },
+        "cordova-plugin-media"
+    ],
+    "cordovaPlatforms": [
+        "android",
+        "ios",
+        {
+            "platform": "android",
+            "version": "",
+            "locator": "android"
+        },
+        {
+            "platform": "ios",
+            "version": "",
+            "locator": "ios"
+        }
+    ],
+    "cordova": {
+        "plugins": {
+            "cordova-plugin-inappbrowser": {},
+            "cordova-plugin-media": {},
+            "ionic-plugin-keyboard": {}
+        },
+        "platforms": [
+            "android"
+        ]
     }
-  ]
 }

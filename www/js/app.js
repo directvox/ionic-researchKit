@@ -5,7 +5,65 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ionicResearchKit', 'ngCordova', 'checklist-model', 'angular-svg-round-progressbar'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ionicResearchKit', 'ngCordova', 'checklist-model', 'angular-svg-round-progressbar','tmh.dynamicLocale',
+  'pascalprecht.translate'
+])
+
+  .constant('availableLanguages', ['en-US', 'fr-fr'])
+  .constant('defaultLanguage', 'fr-fr')
+  .run(function($ionicPlatform, tmhDynamicLocale, $translate, $cordovaGlobalization,
+                availableLanguages,$rootScope, defaultLanguage, $locale) {
+
+    function applyLanguage(language) {
+      tmhDynamicLocale.set(language.toLowerCase());
+    }
+
+    function getSuitableLanguage(language) {
+      for (var index = 0; index < availableLanguages.length; index++) {
+        if (availableLanguages[index].toLowerCase() === language.toLocaleLowerCase()) {
+          return availableLanguages[index];
+        }
+      }
+      return defaultLanguage;
+    }
+
+    function setLanguage() {
+      if (typeof navigator.globalization !== "undefined") {
+        $cordovaGlobalization.getPreferredLanguage().then(function (result) {
+          var language = getSuitableLanguage(result.value);
+          applyLanguage(language);
+          $translate.use(language);
+        });
+      } else {
+        applyLanguage(defaultLanguage);
+      }
+    }
+
+    $ionicPlatform.ready(function() {
+      // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+      // for form inputs)
+      setLanguage();
+
+      if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
+        cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+        cordova.plugins.Keyboard.disableScroll(true);
+
+      }
+      if (window.StatusBar) {
+        // org.apache.cordova.statusbar required
+        StatusBar.styleLightContent();
+      }
+    });
+  })
+
+  .config(function (tmhDynamicLocaleProvider, $translateProvider, defaultLanguage) {
+    tmhDynamicLocaleProvider.localeLocationPattern('locales/angular-locale_{{locale}}.js');
+    $translateProvider.useStaticFilesLoader({
+      'prefix': 'i18n/',
+      'suffix': '.json'
+    });
+    $translateProvider.preferredLanguage(defaultLanguage);
+  })
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {

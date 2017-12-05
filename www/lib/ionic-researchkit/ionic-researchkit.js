@@ -20,7 +20,7 @@ angular.module('ionicResearchKit',[])
 
 
 //======================================================================================
-// Usage: 
+// Usage:
 // =====================================================================================
 .service('irkResults', function() {
     var service = this;
@@ -52,7 +52,7 @@ angular.module('ionicResearchKit',[])
                 "index": index,
                 "start": new Date(),
                 "end": null
-            });            
+            });
         }
         else
         {
@@ -72,12 +72,12 @@ angular.module('ionicResearchKit',[])
                 results.childResults[index].answer = (stepValue?stepValue.toDateString():null);
             else if (stepType == 'IRK-TIME-QUESTION-STEP')
                 results.childResults[index].answer = (stepValue?stepValue.toTimeString():null);
-            else if (stepType != 'IRK-INSTRUCTION-STEP' && stepType != 'IRK-COUNTDOWN-STEP' 
-                        && stepType != 'IRK-COMPLETION-STEP' && stepType != 'IRK-VISUAL-CONSENT-STEP' 
-                        && !(stepType=='IRK-CONSENT-REVIEW-STEP' && consentType=='signature') 
-                        && !(stepType=='IRK-CONSENT-REVIEW-STEP' && consentType=='name') 
-                        && stepType != 'IRK-TWO-FINGER-TAPPING-INTERVAL-TASK' 
-                        && stepType != 'IRK-AUDIO-TASK'&& stepType != 'IRK-IMAGE-TASK' 
+            else if (stepType != 'IRK-INSTRUCTION-STEP' && stepType != 'IRK-COUNTDOWN-STEP'
+                        && stepType != 'IRK-COMPLETION-STEP' && stepType != 'IRK-VISUAL-CONSENT-STEP'
+                        && !(stepType=='IRK-CONSENT-REVIEW-STEP' && consentType=='signature')
+                        && !(stepType=='IRK-CONSENT-REVIEW-STEP' && consentType=='name')
+                        && stepType != 'IRK-TWO-FINGER-TAPPING-INTERVAL-TASK'
+                        && stepType != 'IRK-AUDIO-TASK'&& stepType != 'IRK-IMAGE-TASK'
                         && stepType != 'IRK-VIDEO-CAPTURE-TASK' && stepType != 'IRK-SPATIAL-MEMORY-TASK'
                         && stepType != 'IRK-GAIT-BALANCE-TASK' && stepType != 'IRK-FITNESS-TASK')
                 results.childResults[index].answer = (stepValue?stepValue:null);
@@ -131,7 +131,7 @@ angular.module('ionicResearchKit',[])
 })
 
 //======================================================================================
-// Usage: 
+// Usage:
 // =====================================================================================
 .service('irkConsentDocument', function($filter) {
     var service = this;
@@ -143,7 +143,7 @@ angular.module('ionicResearchKit',[])
     var pdfSignature = null;
 
     service.initDocument = function() {
-        pdfDefinition = { 
+        pdfDefinition = {
             pageSize: 'LEGAL',
             pageMargins: [ 50, 50, 50, 50 ],
             styles: {
@@ -199,7 +199,7 @@ angular.module('ionicResearchKit',[])
                     }
                 ],
                 columnGap: 10
-            });            
+            });
             pdfContent.push({
                 columns: [
                     {
@@ -217,7 +217,7 @@ angular.module('ionicResearchKit',[])
                 columns: [
                     {
                         width: '*',
-                        text: pdfTitle + ' Name & Signature' 
+                        text: pdfTitle + ' Name & Signature'
                     },
                     {
                         width: '*',
@@ -236,11 +236,11 @@ angular.module('ionicResearchKit',[])
             consentDocument = pdfMake.createPdf(pdfDefinition);
         }
         return consentDocument;
-    };   
+    };
 })
 
 //======================================================================================
-// Usage: 
+// Usage:
 // =====================================================================================
 .directive('irkOrderedTasks', [
     '$rootScope',
@@ -256,7 +256,8 @@ angular.module('ionicResearchKit',[])
     '$ionicPopup',
     '$ionicPlatform',
     'irkResults',
-    function($rootScope, $timeout, $interval, $compile, $ionicSlideBoxDelegate, $ionicHistory, $ionicScrollDelegate, $ionicNavBarDelegate, $ionicActionSheet, $ionicModal, $ionicPopup, $ionicPlatform, irkResults) {
+    '$translate',
+    function($rootScope, $timeout, $interval, $compile, $ionicSlideBoxDelegate, $ionicHistory, $ionicScrollDelegate, $ionicNavBarDelegate, $ionicActionSheet, $ionicModal, $ionicPopup, $ionicPlatform, irkResults, $translate) {
         return {
             restrict: 'E',
             replace: true,
@@ -319,7 +320,7 @@ angular.module('ionicResearchKit',[])
                         return $ionicHistory.isActiveScope($scope);
                     }
                 );
-                
+
                 $scope.$on('$destroy', function() {
                     deregisterInstance();
                     slider.kill();
@@ -364,7 +365,7 @@ angular.module('ionicResearchKit',[])
                     var stepType = step.prop('tagName');
 
                     if (stepType=='IRK-COMPLETION-STEP' && index==slider.slidesCount()-1)
-                    {                    
+                    {
                         $scope.doNext();
                     }
                     else
@@ -391,15 +392,15 @@ angular.module('ionicResearchKit',[])
 
                     //This is needed to set the Android back button to map back to the step back action
                     $scope.deregisterStepBack();
-                    
+
                     //Just in case we're coming from a countdown step
-                    $scope.stopCountdown();                    
+                    $scope.stopCountdown();
                 };
 
                 $scope.$on("step:Previous", function() {
                     slider.prev();
                 });
-                
+
                 $scope.$on("step:Next", function() {
                     $scope.doNext();
                 });
@@ -415,9 +416,9 @@ angular.module('ionicResearchKit',[])
                     $scope.learnmore = $ionicModal.fromTemplate(
                         '<ion-modal-view class="irk-modal">'+
                         '<ion-header-bar>'+
-                        '<h1 class="title">Learn More</h1>'+
+                        '<h1 class="title">{{"RK_LEARN_MORE" | translate}}</h1>'+
                         '<div class="buttons">'+
-                        '<button class="button button-clear button-positive irk-button-learn-more-done" ng-click="hideLearnMore()">Done</button>'+
+                        '<button class="button button-clear button-positive irk-button-learn-more-done" ng-click="hideLearnMore()">{{"RK_DONE" | translate}}</button>'+
                         '</div>'+
                         '</ion-header-bar>'+
                         '<ion-content class="padding">'+
@@ -473,7 +474,7 @@ angular.module('ionicResearchKit',[])
                 $scope.doDisagree = function() {
                     $scope.formData.consent = false;
                     $scope.doSave();
-                    $scope.doEnd();                    
+                    $scope.doEnd();
                 };
 
                 //This is called to reanimate GIF images
@@ -518,7 +519,7 @@ angular.module('ionicResearchKit',[])
                     }
 
                     $scope.previousIndex = index;
-                }; 
+                };
 
                 //This is called when input changes (faster than form.$dirty)
                 $scope.dirty = function() {
@@ -530,14 +531,14 @@ angular.module('ionicResearchKit',[])
                         var form = step.find('form');
                         var input = form.find('input');
                         var next = angular.element(document.querySelectorAll('.irk-next-button'));
-                        if (form.length > 0  
+                        if (form.length > 0
                             && ((stepType!='IRK-DATE-QUESTION-STEP' && stepType!='IRK-TIME-QUESTION-STEP' && form.hasClass('ng-invalid'))
                                 || ((stepType=='IRK-DATE-QUESTION-STEP' || stepType=='IRK-TIME-QUESTION-STEP') && input.hasClass('ng-invalid'))))
                         {
                             angular.element(next[0]).attr("disabled", "disabled");
                             angular.element(next[1]).attr("disabled", "disabled");
-                        } 
-                        else 
+                        }
+                        else
                         {
                             angular.element(next[0]).removeAttr("disabled");
                             angular.element(next[1]).removeAttr("disabled");
@@ -552,7 +553,7 @@ angular.module('ionicResearchKit',[])
                 //This is called to capture the results
                 $scope.doSave = function() {
                     irkResults.addResult(slider.currentIndex(), $scope.formData);
-                }; 
+                };
 
                 $scope.$on("slideBox.slideChanged", function(e, index) {
                     $scope.doSave();
@@ -578,13 +579,13 @@ angular.module('ionicResearchKit',[])
                 //FOOTER BAR FOR SURVEY STEPS
                 '<ion-footer-bar class="irk-bottom-bar" keyboard-attach irk-survey-bar>'+
                 '<div>'+
-                '<a class="button button-block button-outline button-positive irk-bottom-button irk-button-step-next" ng-click="doStepNext()" irk-step-next>Next</a>'+
-                '<a class="button button-block button-clear button-positive irk-bottom-button irk-button-step-skip" ng-click="doSkip()" irk-step-skip>Skip this question</a>'+
+                '<a class="button button-block button-outline button-positive irk-bottom-button irk-button-step-next" ng-click="doStepNext()" irk-step-next>{{"RK_NEXT" | translate}}</a>'+
+                '<a class="button button-block button-clear button-positive irk-bottom-button irk-button-step-skip" ng-click="doSkip()" irk-step-skip>{{"RK_SKIP" | translate}}</a>'+
                 '</div>'+
                 '</ion-footer-bar>'+
                 //FOOTER BAR FOR CONSENT STEPS
                 '<ion-footer-bar class="irk-bottom-bar irk-bottom-bar-consent" keyboard-attach irk-consent-bar>'+
-                '<button class="button button-block button-outline button-positive irk-bottom-button irk-button-step-next" ng-click="doStepNext()" irk-step-next>Next</button>'+
+                '<button class="button button-block button-outline button-positive irk-bottom-button irk-button-step-next" ng-click="doStepNext()" irk-step-next>{{"RK_NEXT" | translate}}</button>'+
                 '</ion-footer-bar>'+
                 //FOOTER BAR FOR CONSENT REVIEW
                 '<ion-footer-bar class="irk-bottom-bar irk-bottom-bar-consent-agree bar-stable" irk-consent-bar-agree>'+
@@ -607,7 +608,7 @@ angular.module('ionicResearchKit',[])
                     '</div>'+
                     '<h1 class="title" irk-step-title></h1>'+
                     '<div class="buttons">'+
-                    '<button class="button button-clear button-positive irk-button-step-cancel" ng-click="doCancel()" irk-step-cancel>Cancel</button>'+
+                    '<button class="button button-clear button-positive irk-button-step-cancel" ng-click="doCancel()" irk-step-cancel>{{"RK_CANCEL" | translate}}</button>'+
                     '</div>'+
                     '</ion-header-bar>'
                     );
@@ -681,16 +682,18 @@ angular.module('ionicResearchKit',[])
             scope.$on("slideBox.slideChanged", function(e, index, count) {
                 element.addClass('irk-next-button');
 
-                if (index == count - 1)
-                    element.text("Done");
-                else
-                    element.text("Next");
+              $translate(['RK_NEXT', 'RK_DONE']).then(function (translations) {
 
+                if (index == count - 1)
+                  element.text(translations.RK_DONE);
+                else
+                  element.text(translations.RK_NEXT);
+              });
                 //Hide for Instruction Step, Visual Content Overview, Consent Sharing, and Consent Review
                 var step = angular.element(document.querySelectorAll('.irk-slider-slide')[index].querySelector('.irk-step'));
                 var stepType = step.prop('tagName');
                 var consentType = step.attr('type');
-                element.toggleClass('ng-hide', stepType=='IRK-INSTRUCTION-STEP' || (stepType=='IRK-VISUAL-CONSENT-STEP' && consentType=='overview') || stepType=='IRK-CONSENT-SHARING-STEP' || (stepType=='IRK-CONSENT-REVIEW-STEP' && consentType=='review'));                
+                element.toggleClass('ng-hide', stepType=='IRK-INSTRUCTION-STEP' || (stepType=='IRK-VISUAL-CONSENT-STEP' && consentType=='overview') || stepType=='IRK-CONSENT-SHARING-STEP' || (stepType=='IRK-CONSENT-REVIEW-STEP' && consentType=='review'));
 
                 //Show for Instruction Step only if footerAttach is set to true
                 var footerAttach = step.attr('footer-attach')=='true';
@@ -702,7 +705,7 @@ angular.module('ionicResearchKit',[])
                 //Enable only when current form is dirtied and valid
                 var form = step.find('form');
                 var input = form.find('input');
-                if (form.length > 0  
+                if (form.length > 0
                     && ((stepType!='IRK-DATE-QUESTION-STEP' && stepType!='IRK-TIME-QUESTION-STEP' && (form.hasClass('ng-pristine') || form.hasClass('ng-invalid')))
                         || ((stepType=='IRK-DATE-QUESTION-STEP' || stepType=='IRK-TIME-QUESTION-STEP') && (input.hasClass('ng-pristine') || input.hasClass('ng-invalid')))))
                     element.attr("disabled", "disabled");
@@ -790,7 +793,7 @@ angular.module('ionicResearchKit',[])
         },
         link: function(scope, element, attrs, controller) {
             element.addClass('irk-step');
-        }        
+        }
     }
 })
 
@@ -1094,7 +1097,7 @@ angular.module('ionicResearchKit',[])
                     $scope.selected.text = $scope.$parent.formData[stepID];
                     $scope.$parent.dirty();
                 }
-            }            
+            }
         }],
         template: function(elem, attr) {
             return  '<form name="form.'+attr.id+'" class="irk-slider" novalidate>'+
@@ -1121,7 +1124,7 @@ angular.module('ionicResearchKit',[])
                 if (stepType=='IRK-IMAGE-CHOICE-QUESTION-STEP' && stepID==attrs.id) {
                     scope.initStep(stepID);
                 }
-            });      
+            });
         }
     }
 })
@@ -1226,7 +1229,7 @@ angular.module('ionicResearchKit',[])
 })
 
 //======================================================================================
-// Usage: 
+// Usage:
 // =====================================================================================
 .directive('irkVisualConsentStep', function() {
     return {
@@ -1240,43 +1243,58 @@ angular.module('ionicResearchKit',[])
 
             switch (consentType) {
                 case 'overview':
-                    consentTitle = 'Welcome';
-                    consentText = 'Learn more about the study first';
+   //                 consentTitle = 'Welcome';
+                    consentTitle = 'RK_CONSENT_WELCOME';
+   //                 consentText = 'Learn more about the study first';
+                    consentText  = 'RK_CONSENT_LEARN_MORE';
                     consentImageClass = 'irk-consent-none';
                     break;
                 case 'data-gathering':
-                    consentTitle = 'Data Gathering';
-                    consentText = 'Learn more about how data is gathered';
+                    consentTitle = 'RK_CONSENT_DATA_GATHERING';
+    //                consentText = 'Learn more about how data is gathered';
+                    consentText  = 'RK_CONSENT_DATA_GATHERING_LEARN_MORE';
                     consentImageClass = 'irk-consent-01';
                     break;
                 case 'privacy':
-                    consentTitle = 'Privacy';
-                    consentText = 'Learn more about how your privacy and identity are protected';
+                  consentTitle =  'RK_PRIVACY';
+                  consentText  =  'RK_PRIVACY_LEARN_MORE';
+                    // consentTitle = 'Privacy';
+                    // consentText = 'Learn more about how your privacy and identity are protected';
                     consentImageClass = 'irk-consent-02';
                     break;
                 case 'data-use':
-                    consentTitle = 'Data Use';
-                    consentText = 'Learn more about how data is used';
+                  consentTitle =  'RK_DATA_USE';
+                  consentText  =  'RK_DATA_USE_LEARN_MORE';
+                    // consentTitle = 'Data Use';
+                    // consentText = 'Learn more about how data is used';
                     consentImageClass = 'irk-consent-03';
                     break;
                 case 'time-commitment':
-                    consentTitle = 'Time Commitment';
-                    consentText = 'Learn more about the study\'s impact on your time';
+                  consentTitle =  'RK_TIME_COMMITEMENT';
+                  consentText  =  'RK_PTIME_COMMITEMENT_LEARN_MORE';
+                    // consentTitle = 'Time Commitment';
+                    // consentText = 'Learn more about the study\'s impact on your time';
                     consentImageClass = 'irk-consent-04';
                     break;
                 case 'study-survey':
-                    consentTitle = 'Study Survey';
-                    consentText = 'Learn more about the study survey';
+                  consentTitle =  'RK_STUDY_SURVEY';
+                  consentText  =  'RK_STUDY_SURVEY_LEARN_MORE';
+                    // consentTitle = 'Study Survey';
+                    // consentText = 'Learn more about the study survey';
                     consentImageClass = 'irk-consent-05';
                     break;
                 case 'study-tasks':
-                    consentTitle = 'Study Tasks';
-                    consentText = 'Learn more about the tasks involved';
+                  consentTitle =  'RK_STUDY_TASKS';
+                  consentText =   'RK_STUDY_TASKS_LEARN_MORE';
+                    // consentTitle = 'Study Tasks';
+                    // consentText = 'Learn more about the tasks involved';
                     consentImageClass = 'irk-consent-06';
                     break;
                 case 'withdrawing':
-                    consentTitle = 'Withdrawing';
-                    consentText = 'Learn more about withdrawing';
+                  consentTitle =  'RK_WITHDRAWING';
+                  consentText =   'RK_WITHDRAWING_LEARN_MORE';
+                    // consentTitle = 'Withdrawing';
+                    // consentText = 'Learn more about withdrawing';
                     consentImageClass = 'irk-consent-07';
                     break;
                 case 'custom':
@@ -1286,25 +1304,25 @@ angular.module('ionicResearchKit',[])
                     break;
             }
 
-            if (consentType == 'only-in-document') 
+            if (consentType == 'only-in-document')
             {
                 return  '<div class="irk-learn-more-content" ng-transclude>'+
                         '</div>';
             }
-            else 
+            else
             {
                 return  '<div class="irk-centered">'+
                         '<div class="item irk-step-image '+consentImageClass+' positive"></div>'+
                         '<div class="irk-spacer"></div>'+
                         '<div class="irk-text-centered">'+
-                        '<h2>'+consentTitle+'</h2>'+
+                        '<h2 translate>'+consentTitle+'</h2>'+
                         '<p>'+attr.summary+'</p>'+
                         '</div>'+
-                        (attr.showLearnMore && attr.showLearnMore=='false'?'':'<a class="button button-clear button-positive irk-button-learn-more" ng-click="$parent.showLearnMore()">'+consentText+'</a>')+
+                        (attr.showLearnMore && attr.showLearnMore=='false'?'':'<a class="button button-clear button-positive irk-button-learn-more" ng-click="$parent.showLearnMore()">'+  '<div translate>'+consentTitle+'</div>'+'</a>')+
                         '<div class="irk-learn-more-content" ng-transclude>'+
                         '</div>'+
                         '<div class="irk-spacer"></div>'+
-                        (consentType=='overview'?'<button class="button button-outline button-positive irk-button-instruction" ng-click="$parent.doNext()">Get Started</button>':'')+
+                        (consentType=='overview'?'<button class="button button-outline button-positive irk-button-instruction" ng-click="$parent.doNext()">{{"RK_GET_STARTED" | translate }}</button>':'')+
                         '</div>';
             }
         },
@@ -1344,12 +1362,12 @@ angular.module('ionicResearchKit',[])
 
                 element.attr('title', consentTitle);
             };
-        }        
+        }
     }
 })
 
 //======================================================================================
-// Usage: 
+// Usage:
 // =====================================================================================
 .directive('irkConsentSharingStep', function() {
     return {
@@ -1358,9 +1376,9 @@ angular.module('ionicResearchKit',[])
         template: function(elem, attr) {
             return  '<div class="irk-centered">'+
                     '<div class="irk-text-centered">'+
-                    '<h2>Sharing Options</h2>'+
+                    '<h2 translate>CONSENT_SHARING_TITLE</h2>'+
                     '<p>'+attr.summary+'</p>'+
-                    '<p>Sharing your coded study data more broadly (without information such as your name) may benefit this and future research.</p>'+
+                    '<p translate></p>'+
                     '</div>'+
                     '<a class="button button-clear button-positive irk-button-learn-more" ng-click="$parent.showLearnMore()">Learn more about data sharing</a>'+
                     '<div class="irk-learn-more-content" ng-transclude>'+
@@ -1385,7 +1403,7 @@ angular.module('ionicResearchKit',[])
 })
 
 //======================================================================================
-// Usage: 
+// Usage:
 // =====================================================================================
 .directive('irkConsentReviewStep', ['irkConsentDocument', function(irkConsentDocument) {
     return {
@@ -1461,7 +1479,7 @@ angular.module('ionicResearchKit',[])
                             //Add the consent section to the consent document (PDF)
                             irkConsentDocument.addConsentSection(stepTitle, stepContent.text());
                         };
-                        
+
                         var container = angular.element(document.querySelector('.irk-consent-review-derived-content'));
                         container.append(scope.reviewContent);
                     }
@@ -1481,7 +1499,7 @@ angular.module('ionicResearchKit',[])
 }])
 
 //======================================================================================
-// Usage: 
+// Usage:
 // =====================================================================================
 .directive('irkConsentName', ['irkConsentDocument', function(irkConsentDocument) {
     return {
@@ -1512,7 +1530,7 @@ angular.module('ionicResearchKit',[])
 }])
 
 //======================================================================================
-// Usage: 
+// Usage:
 // =====================================================================================
 .directive('irkConsentSignature', ['irkConsentDocument', function(irkConsentDocument) {
     return {
@@ -1533,8 +1551,8 @@ angular.module('ionicResearchKit',[])
                 {
                     angular.element(next[0]).attr("disabled", "disabled");
                     angular.element(next[1]).attr("disabled", "disabled");
-                } 
-                else 
+                }
+                else
                 {
                     angular.element(next[0]).removeAttr("disabled");
                     angular.element(next[1]).removeAttr("disabled");
@@ -1552,7 +1570,7 @@ angular.module('ionicResearchKit',[])
 
                 //Add the participant signature to the consent document (PDF)
                 irkConsentDocument.addParticipantSignature($scope.$parent.$parent.formData.signature);
-            }   
+            }
         }],
         template: function(elem, attr) {
             return  '<div>'+
@@ -1561,7 +1579,7 @@ angular.module('ionicResearchKit',[])
                     '<a class="button button-clear button-dark irk-button-signature-sign" ng-disabled="true">Sign Here</a>'+
                     '</div>'
         },
-        link: function(scope, element, attrs, controller) {            
+        link: function(scope, element, attrs, controller) {
             scope.$on("slideBox.slideChanged", function(e, index, count) {
                 //Show only for Consent Review Signature
                 var step = angular.element(document.querySelectorAll('.irk-slider-slide')[index].querySelector('.irk-step'));
@@ -1581,7 +1599,7 @@ angular.module('ionicResearchKit',[])
 
                         canvasEl.on('touchend', function (e) {
                             scope.saveSignature();
-                        });                        
+                        });
                     }
 
                     //Set the Next/Done state
@@ -1595,7 +1613,7 @@ angular.module('ionicResearchKit',[])
 }])
 
 //======================================================================================
-// Usage: 
+// Usage:
 // =====================================================================================
 .directive('irkCountdownStep', function() {
     return {
@@ -1611,7 +1629,7 @@ angular.module('ionicResearchKit',[])
                     else
                         $scope.countdown--;
                 }, 1000, $scope.duration+1);
-            }   
+            }
         }],
         template: function(elem, attr) {
             return  '<div class="irk-offcentered-container"><div class="irk-offcentered-content">'+
@@ -1638,13 +1656,13 @@ angular.module('ionicResearchKit',[])
                 if (stepType=='IRK-COUNTDOWN-STEP' && stepID==attrs.id) {
                     scope.startCountdown();
                 }
-            });            
+            });
         }
     }
 })
 
 //======================================================================================
-// Usage: 
+// Usage:
 // =====================================================================================
 .directive('irkCompletionStep', function() {
     return {
@@ -1671,7 +1689,7 @@ angular.module('ionicResearchKit',[])
 })
 
 //======================================================================================
-// Usage: 
+// Usage:
 // =====================================================================================
 .directive('irkTwoFingerTappingIntervalTask', function() {
     return {
@@ -1697,20 +1715,20 @@ angular.module('ionicResearchKit',[])
                     else
                         $scope.progress++;
                 }, 1000, $scope.duration);
-            } 
+            }
 
             $scope.initActiveTask = function(stepID) {
                 $scope.taskStarted = false;
                 $scope.toggleProgressBar(false);
                 $scope.activeStepID = stepID;
 
-                $scope.tapsCount = 0;  
+                $scope.tapsCount = 0;
                 $scope.$parent.formData[$scope.activeStepID] = {};
                 $scope.$parent.formData[$scope.activeStepID].samples = {};
             }
 
             $scope.startActiveTask = function() {
-                $scope.tapsStartTime = (new Date()).getTime();  
+                $scope.tapsStartTime = (new Date()).getTime();
                 $scope.taskStarted = true;
                 $scope.startProgress();
             }
@@ -1720,7 +1738,7 @@ angular.module('ionicResearchKit',[])
                     $scope.startActiveTask();
                 }
 
-                var tapsCurrentTime = ((new Date()).getTime() - $scope.tapsStartTime) / 1000;  
+                var tapsCurrentTime = ((new Date()).getTime() - $scope.tapsStartTime) / 1000;
                 $scope.$parent.formData[$scope.activeStepID].samples[tapsCurrentTime] = (buttonId?buttonId:'none');
                 if (buttonId) $scope.tapsCount++;
             }
@@ -1753,13 +1771,13 @@ angular.module('ionicResearchKit',[])
                 if (stepType=='IRK-TWO-FINGER-TAPPING-INTERVAL-TASK' && stepID==attrs.id) {
                     scope.initActiveTask(stepID);
                 }
-            });            
+            });
         }
     }
 })
 
 //======================================================================================
-// Usage: 
+// Usage:
 // =====================================================================================
 .directive('irkAudioTask', function() {
     return {
@@ -1794,7 +1812,7 @@ angular.module('ionicResearchKit',[])
                         $scope.audioSample = $cordovaMedia.newMedia(cordova.file.externalRootDirectory + audioFileURL);
                     } else {
                         $scope.audioSample = $cordovaMedia.newMedia("documents://" + audioFileURL);
-                    }                    
+                    }
                 }
             }
 
@@ -1834,7 +1852,7 @@ angular.module('ionicResearchKit',[])
                 }, 1000, $scope.duration);
 
                 /*
-                $scope.audioSample = new Media(audioFileName, 
+                $scope.audioSample = new Media(audioFileName,
                 // success callback
                 function() {
                     console.log("recordAudio():Audio Success");
@@ -1926,7 +1944,7 @@ angular.module('ionicResearchKit',[])
             $scope.$on('$destroy', function () {
                 document.removeEventListener("pause", $scope.killAudio);
                 document.removeEventListener("resume", $scope.queueAudio);
-            });                  
+            });
 
         }],
         template: function(elem, attr) {
@@ -1935,7 +1953,7 @@ angular.module('ionicResearchKit',[])
                     '<h2>' + (attr.text ? attr.text : 'Your more specific voice instruction goes here. For example, say \'Aaaah\'.') + '</h2>'+
                     '</div>'+
                     '<div class="irk-audio-button-container" ng-show="audioActive">'+
-                    '<ion-spinner icon="lines" class="spinner-positive irk-spinner-audio-task"></ion-spinner>' + 
+                    '<ion-spinner icon="lines" class="spinner-positive irk-spinner-audio-task"></ion-spinner>' +
                     '<h4 class="dark">{{audioActivity}} Audio</h4>'+
                     '<h4 class="dark">{{audioTimer}}</h4>'+
                     '</div>'+
@@ -1946,8 +1964,8 @@ angular.module('ionicResearchKit',[])
                     '</div>'+
                     '<ion-footer-bar class="irk-bottom-bar" keyboard-attach irk-audio-bar>'+
                     '<div>'+
-                    ((attr.autoComplete && attr.autoComplete=="false")?'<a class="button button-block button-outline button-positive irk-bottom-button irk-button-step-next" ng-click="$parent.doNext()" ng-disabled="!audioSample || audioActive">Next</a>':'')+
-                    ((attr.optional && attr.optional=="true")?'<a class="button button-block button-clear button-positive irk-bottom-button irk-button-step-skip" ng-click="$parent.doSkip()" ng-disabled="audioSample || audioActive">Skip this task</a>':'')+
+                    ((attr.autoComplete && attr.autoComplete=="false")?'<a class="button button-block button-outline button-positive irk-bottom-button irk-button-step-next" ng-click="$parent.doNext()" ng-disabled="!audioSample || audioActive">{{"RK_NEXT" | translate}}</a>':'')+
+                    ((attr.optional && attr.optional=="true")?'<a class="button button-block button-clear button-positive irk-bottom-button irk-button-step-skip" ng-click="$parent.doSkip()" ng-disabled="audioSample || audioActive">{{"RK_SKIP" | translate}}</a>':'')+
                     '</div>'+
                     '</ion-footer-bar>'
 
@@ -1968,14 +1986,14 @@ angular.module('ionicResearchKit',[])
                 if (stepType!='IRK-AUDIO-TASK' && scope.audioSample) {
                     scope.killAudio()
                 }
-            });      
+            });
         }
     }
 })
 
 
 //======================================================================================
-// Usage: 
+// Usage:
 // =====================================================================================
 .directive('irkImageTask', function() {
     return {
@@ -1987,16 +2005,16 @@ angular.module('ionicResearchKit',[])
             $scope.initActiveTask = function(stepID) {
                 $scope.activeStepID = stepID;
                 console.log("Initiating Image Capture Task");
-                
+
             }
 
             $scope.takePicture = function() {
-                
-                
-                var options = { 
-                quality : 75, 
-                destinationType : Camera.DestinationType.FILE_URI, 
-                sourceType : Camera.PictureSourceType.CAMERA, 
+
+
+                var options = {
+                quality : 75,
+                destinationType : Camera.DestinationType.FILE_URI,
+                sourceType : Camera.PictureSourceType.CAMERA,
                 allowEdit : true,
                 encodingType: Camera.EncodingType.JPEG,
                 popoverOptions: CameraPopoverOptions,
@@ -2017,7 +2035,7 @@ angular.module('ionicResearchKit',[])
             }, options);
          }
 
-            
+
         }],
         template: function(elem, attr) {
             return  '<div class="irk-centered">'+
@@ -2045,14 +2063,14 @@ angular.module('ionicResearchKit',[])
                     console.log("Initiating Image Task")
                     scope.initActiveTask(stepID);
                 }
-            });             
+            });
         }
     }
 })
 
 
 //======================================================================================
-// Usage: 
+// Usage:
 // =====================================================================================
 .directive('irkVideoCaptureTask', function() {
     return {
@@ -2065,13 +2083,13 @@ angular.module('ionicResearchKit',[])
                 $scope.activeStepID = stepID;
                 $scoe.isSaved = false;
                 console.log("Initiating Video Capture Task");
-                
+
             }
 
             $scope.captureVideo = function() {
 
               var options = { limit: 1, duration: 15 };
-              
+
               navigator.device.capture.captureVideo(function(videoData) {
                 $scope.$parent.formData[$scope.activeStepID] = {};
                 $scope.$parent.formData[$scope.activeStepID].fileURL = videoData
@@ -2085,14 +2103,14 @@ angular.module('ionicResearchKit',[])
                 }, options);
               }
 
-            
+
         }],
         template: function(elem, attr) {
             return  '<div class="irk-centered">'+
                     '<div class="irk-text-centered">'+
                     '<h2>' + (attr.text ? attr.text : 'More detailed instructions here. Take a video.') + '</h2>'+
                     '<div class="irk-preview">' +
-                    '<p ng-show="isSaved"> Your video has been saved. </p>' + 
+                    '<p ng-show="isSaved"> Your video has been saved. </p>' +
                     //'<video ng-show="videoSrc !== undefined" ng-src="{{videoSrc}} type=video/mp4">'+
                     '</div>' +
                     '</div>'+
@@ -2113,19 +2131,19 @@ angular.module('ionicResearchKit',[])
                     scope.initActiveTask(stepID);
                 }
 
-               
-           });             
+
+           });
         }
     }
 })
 
 //======================================================================================
-// Usage: 
-// The span (that is, the length of the pattern sequence) is automatically varied during the task, 
-// increasing after successful completion of a sequence, and decreasing after failures, in the range 
-// from minimumSpan to maximumSpan. The playSpeed property lets you control the speed of sequence 
+// Usage:
+// The span (that is, the length of the pattern sequence) is automatically varied during the task,
+// increasing after successful completion of a sequence, and decreasing after failures, in the range
+// from minimumSpan to maximumSpan. The playSpeed property lets you control the speed of sequence
 // playback, and the customTargetImage property lets you customize the shape of the tap target.
-// The game finishes when either maxTests tests have been completed, or the user has made 
+// The game finishes when either maxTests tests have been completed, or the user has made
 // maxConsecutiveFailures errors in a row.
 // =====================================================================================
 
@@ -2202,7 +2220,7 @@ angular.module('ionicResearchKit',[])
                 $scope.sequence = [];
                 $scope.gameBoard = [];
                 $scope.gameState = [];
-               
+
                 console.log("End game state: " + $scope.currentGameState);
                 if($scope.currentGameState == $scope.state.FAILED)
                 {
@@ -2310,7 +2328,7 @@ angular.module('ionicResearchKit',[])
                 }
                 else if(state == $scope.tileState.CORRECT)
                     return "irk-spatial-tile-correct";
-                else   
+                else
                     return "irk-spatial-tile-quiescent";
 
             }
@@ -2328,7 +2346,7 @@ angular.module('ionicResearchKit',[])
                     '</div>'+
                     '</div>'+
                     '<div class="irk-spacer"></div>'+
-                    '<button ng-show="currentGameState===state.FAILED || currentGameState===state.SUCCEEDED" class="button irk-small-button button-outline button-positive irk-button-step-next irk-next-button" ng-click="replayGame()">Next</button>' +
+                    '<button ng-show="currentGameState===state.FAILED || currentGameState===state.SUCCEEDED" class="button irk-small-button button-outline button-positive irk-button-step-next irk-next-button" ng-click="replayGame()">{{"RK_NEXT" | translate}}</button>' +
                     '</div>'
                     /*'<div class = "irk-spatial-score-container">' +
                     '<h4>Squares</h4>'+
@@ -2347,13 +2365,13 @@ angular.module('ionicResearchKit',[])
                 if (stepType=='IRK-SPATIAL-MEMORY-TASK' && stepID==attrs.id) {
                     scope.initActiveTask(stepID);
                 }
-            });            
+            });
         }
     }
 })
 
 //======================================================================================
-// Usage: 
+// Usage:
 // =====================================================================================
 .directive('irkGaitBalanceTask', function() {
     return {
@@ -2364,7 +2382,7 @@ angular.module('ionicResearchKit',[])
 
             $scope.initActiveTask = function(stepID) {
                 $scope.activeStepID = stepID;
-                 
+
                 // acceleration
                 $scope.$parent.formData[$scope.activeStepID] = {};
                 $scope.$parent.formData[$scope.activeStepID].firstLegAccel=[];
@@ -2374,7 +2392,7 @@ angular.module('ionicResearchKit',[])
                 // stepcount
                 $scope.$parent.formData[$scope.activeStepID].firstLegSteps=[];
                 $scope.$parent.formData[$scope.activeStepID].secondLegSteps=[];
-                
+
 
                 // Is Pedometer Available?
                 $scope.pedometerAvailable = false;
@@ -2397,17 +2415,17 @@ angular.module('ionicResearchKit',[])
                     $scope.pedometerAvailable = false;
                 }
 
-                
+
                 // pedometer.isStepCountingAvailable(successCallback, failureCallback);
                 $scope.numSteps = $attrs.numSteps?$attrs.numSteps:20;
                 $scope.distanceInMeters = $attrs.distanceInMeters?$attrs.distanceInMeters:10;
                 $scope.stepDuration = $attrs.stepDuration?$attrs.stepDuration:5;
                 $scope.restDuration = $attrs.restDuration?$attrs.restDuration:10;
-                
+
                 $scope.stepCount = 0;
                 $scope.countdownTime = 5;
                 $scope.startCountdown();
-                
+
                 $scope.stepCounterOffset = 0;
                 $scope.instructions = null;
                 $scope.timer = null;
@@ -2423,7 +2441,7 @@ angular.module('ionicResearchKit',[])
                     }, callback, callback);
             }
 
-            
+
 
              $scope.startCountdown = function() {
                 $scope.currentTimer = $interval(function() {
@@ -2437,7 +2455,7 @@ angular.module('ionicResearchKit',[])
                         $scope.countdownTime -=1;
                     }
                 }, 1000);
-            } 
+            }
 
             // onsuccess if stepcount = whatever then do whatever
 
@@ -2490,14 +2508,14 @@ angular.module('ionicResearchKit',[])
             $scope.trackFirstLeg = function()
             {
                 $scope.stepCount = 0;
-                
+
                 if(!ionic.Platform.isAndroid() && $scope.pedometerAvailable)
                 {
                     var successHandler = function (pedometerData) {
                         $scope.stepCount = pedometer.numberOfSteps;
                         $scope.updateAcceleration($scope.$parent.formData[$scope.activeStepID].firstLegAccel,
                                                     $scope.$parent.formData[$scope.activeStepID].firstLegSteps);
-                        
+
                         if($scope.stepCount >= $scope.numSteps)
                          {
                             $scope.instructions = "Turn around, and walk back to where you started.";
@@ -2544,7 +2562,7 @@ angular.module('ionicResearchKit',[])
                         $scope.stepCount = pedometer.numberOfSteps;
                         $scope.updateAcceleration($scope.$parent.formData[$scope.activeStepID].firstLegAccel,
                                                     $scope.$parent.formData[$scope.activeStepID].firstLegSteps);
-                        
+
                         if($scope.stepCount >= $scope.numSteps)
                          {
                             $scope.instructions = "Stand still for " + $scope.restDuration + " seconds.";
@@ -2641,7 +2659,7 @@ angular.module('ionicResearchKit',[])
                     '<div class="irk-text-centered">'+
                     '<h2 ng-show="countdownTime>0">Starting activity in <br></br>{{countdownTime}}</h2>'+
                     '<h1 ng-show="instructions">{{instructions}}</h1>'+
-                    '<irk-spacer></irk-spacer>' + 
+                    '<irk-spacer></irk-spacer>' +
                     '<div ng-show="timer">'+
                     '{{secondsToMinutesSeconds(timer)}}'+
                     '</div>'+
@@ -2659,14 +2677,14 @@ angular.module('ionicResearchKit',[])
                 if (stepType=='IRK-GAIT-BALANCE-TASK' && stepID==attrs.id) {
                     scope.initActiveTask(stepID);
                 }
-            });            
+            });
         }
     }
 })
 
 
 //======================================================================================
-// Usage: 
+// Usage:
 // =====================================================================================
 .directive('irkFitnessTask', function() {
     return {
@@ -2677,21 +2695,21 @@ angular.module('ionicResearchKit',[])
 
             $scope.initActiveTask = function(stepID) {
                 $scope.activeStepID = stepID;
-                 
+
                 // acceleration
                 $scope.$parent.formData[$scope.activeStepID] = {};
                 $scope.$parent.formData[$scope.activeStepID].acceleration=[];
-                
-                
 
-                
+
+
+
                 // pedometer.isStepCountingAvailable(successCallback, failureCallback);
-                // stepcounter.deviceCanCountSteps() 
+                // stepcounter.deviceCanCountSteps()
                 $scope.duration = $attrs.duration?$attrs.duration:300;
-            
+
                 $scope.distanceInMeters = 0;
                 $scope.trackWalk();
-                
+
                 $scope.timer = null;
             }
 
@@ -2699,11 +2717,11 @@ angular.module('ionicResearchKit',[])
             $scope.calculateDistance = function(lat1, lon1, lat2, lon2) {
               var R = 6371; // km
               var dLat = (lat2 - lat1).toRad();
-              var dLon = (lon2 - lon1).toRad(); 
+              var dLon = (lon2 - lon1).toRad();
               var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                      Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) * 
-                      Math.sin(dLon / 2) * Math.sin(dLon / 2); 
-              var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); 
+                      Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) *
+                      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+              var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
               var d = R * c;
               return d;
             }
@@ -2738,7 +2756,7 @@ angular.module('ionicResearchKit',[])
                     }
                 }, 1000);
             }
-            
+
 
 
             $scope.updateAcceleration = function(accelList, stepsList){
@@ -2771,12 +2789,12 @@ angular.module('ionicResearchKit',[])
             return  '<div class="irk-centered">'+
                     '<div class="irk-text-centered">'+
                     '<h1 ng-show="instructions">{{instructions}}</h1>'+
-                    '<irk-spacer></irk-spacer>' + 
+                    '<irk-spacer></irk-spacer>' +
                     '<div class="irk-fitness-distance">'+
                     '<h2> Distance Traveled </h2>' +
                     '<h4 class="irk-fitness-meters">{{distanceInMeters}} (m)</h4>'+
                     '</div>'+
-                    '<irk-spacer></irk-spacer>' + 
+                    '<irk-spacer></irk-spacer>' +
                     '<div ng-show="timer">'+
                     '<h3 class="irk-fitness-time">{{secondsToMinutesSeconds(timer)}}</h3>'+
                     '</div>'+
@@ -2794,7 +2812,7 @@ angular.module('ionicResearchKit',[])
                 if (stepType=='IRK-FITNESS-TASK' && stepID==attrs.id) {
                     scope.initActiveTask(stepID);
                 }
-            });            
+            });
         }
     }
 })
